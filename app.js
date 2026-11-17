@@ -41,10 +41,10 @@ function getWeekStart(date) {
 }
 function getDayIndex(date) { return (date.getDay() + 1) % 7; }
 function formatDate(date, options = { day: 'numeric', month: 'long', year: 'numeric' }) {
-  return new Intl.DateTimeFormat('ar-EG', options).format(date);
+  return new Intl.DateTimeFormat('ar-EG-u-nu-latn', { ...options, numberingSystem: 'latn' }).format(date);
 }
 function formatShortDate(date) {
-  return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'short' }).format(date);
+  return new Intl.DateTimeFormat('ar-EG-u-nu-latn', { day: 'numeric', month: 'short', numberingSystem: 'latn' }).format(date);
 }
 function normalizeSchedule(raw) {
   const schedule = Array.from({ length: 7 }, () => []);
@@ -212,7 +212,7 @@ function countWeekTasks(start) {
 }
 function renderTodayCard() {
   const today = new Date();
-  $('#todayDay').textContent = new Intl.DateTimeFormat('ar-EG', { weekday: 'long' }).format(today);
+  $('#todayDay').textContent = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { weekday: 'long', numberingSystem: 'latn' }).format(today);
   $('#todayDate').textContent = formatDate(today);
 }
 function renderWeekPanel(targetId) {
@@ -234,7 +234,7 @@ function renderWeekPanel(targetId) {
           const key = dateKey(day);
           const isSelected = key === selectedDate;
           const isToday = key === dateKey(new Date());
-          return `<button type="button" class="day-button${isSelected ? ' selected' : ''}${isToday ? ' today' : ''}" data-action="select-day" data-date="${key}" aria-pressed="${isSelected}"><span class="day-name">${DAY_NAMES[index]}</span><span class="day-number">${new Intl.DateTimeFormat('ar-EG', { day: 'numeric' }).format(day)}</span></button>`;
+          return `<button type="button" class="day-button${isSelected ? ' selected' : ''}${isToday ? ' today' : ''}" data-action="select-day" data-date="${key}" aria-pressed="${isSelected}"><span class="day-name">${DAY_NAMES[index]}</span><span class="day-number">${new Intl.DateTimeFormat('ar-EG-u-nu-latn', { day: 'numeric', numberingSystem: 'latn' }).format(day)}</span></button>`;
         }).join('')}
       </div>
       <div class="selected-day-panel">${renderSelectedDay(selected)}</div>
@@ -268,8 +268,8 @@ function renderSelectedDay(date) {
 }
 function renderStats() {
   const counts = countWeekTasks(getVisibleWeekStart());
-  $('#pendingCount').textContent = new Intl.NumberFormat('ar-EG').format(counts.pending);
-  $('#completedCount').textContent = new Intl.NumberFormat('ar-EG').format(counts.completed);
+  $('#pendingCount').textContent = new Intl.NumberFormat('en-US', { numberingSystem: 'latn' }).format(counts.pending);
+  $('#completedCount').textContent = new Intl.NumberFormat('en-US', { numberingSystem: 'latn' }).format(counts.completed);
 }
 function renderScheduleEditor() {
   $('#scheduleEditor').innerHTML = scheduleDraft.map((subjects, index) => `
@@ -288,7 +288,7 @@ function renderSearchResults() {
     const matchesFilter = searchFilter === 'all' || (searchFilter === 'completed' ? task.completed : !task.completed);
     return matchesQuery && matchesFilter;
   }).sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt));
-  $('#resultCount').textContent = `${new Intl.NumberFormat('ar-EG').format(results.length)} نتيجة`;
+  $('#resultCount').textContent = `${new Intl.NumberFormat('en-US', { numberingSystem: 'latn' }).format(results.length)} نتيجة`;
   $('#searchResults').innerHTML = results.length ? results.map((task) => {
     const date = parseDate(task.date);
     return `<button class="result-card" type="button" data-action="open-result" data-task-id="${escapeHTML(task.id)}"><div class="result-top"><span class="result-subject">${escapeHTML(task.subject)}</span><span class="result-status${task.completed ? ' done' : ''}">${task.completed ? 'مكتمل' : 'غير مكتمل'}</span></div><div class="result-text">${escapeHTML(task.text)}</div><div class="result-date">${DAY_NAMES[getDayIndex(date)]} · ${formatDate(date)}</div></button>`;

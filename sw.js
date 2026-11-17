@@ -1,5 +1,5 @@
 /* دفتر PWA service worker — bump CACHE_VERSION when app shell files change. */
-const CACHE_VERSION = 'daftar-shell-v1.0.0';
+const CACHE_VERSION = 'daftar-shell-v1.0.1';
 const APP_SHELL = [
   './',
   './index.html',

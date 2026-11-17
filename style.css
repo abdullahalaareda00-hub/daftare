@@ -12,9 +12,12 @@
   --danger: #c77c70;
   --radius: 20px;
   --shadow: 0 12px 30px rgba(0,0,0,.18);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Noto Sans Arabic", Tahoma, Arial, sans-serif;
+  font-family: "SamsungOne", "SamsungOneArabic", "Noto Naskh Arabic UI", "Noto Naskh Arabic", "Geeza Pro", serif;
 }
 * { box-sizing: border-box; }
+/* Arabic typography: prefer Samsung/Noto Naskh system fonts; no network font dependency. */
+:lang(en), input[type="number"], .stat-number, .day-number, .week-controls { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+.stat-number, .day-number, .week-range, .date-full, .selected-day-date, .result-date { direction: ltr; unicode-bidi: isolate; }
 html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
 body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 50% -20%, rgba(193,125,82,.07), transparent 55%), var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 button, input, select { font: inherit; }
