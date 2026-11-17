@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101010">
+  <meta name="description" content="دفتر — واجباتك مرتبة، أسبوعًا بعد أسبوع">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="دفتر">
+  <title>دفتر</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-lockup">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img">
+            <path d="M14 8.5h20.5a3 3 0 0 1 3 3v27H17a6 6 0 0 1-6-6v-21a3 3 0 0 1 3-3Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M17 8.5v30M22 17h10M22 23h10M22 29h7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M11 14h6M11 21h6M11 28h6" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".65"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">دفتر</div>
+          <div class="brand-tagline">واجباتك مرتبة، أسبوعًا بعد أسبوع</div>
+        </div>
+      </div>
+      <button class="icon-button today-shortcut" type="button" data-action="today" aria-label="العودة إلى تاريخ اليوم" title="اليوم">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13H4V6a1 1 0 0 1 1-1Z"/></svg>
+      </button>
+    </header>
+
+    <div id="storageNotice" class="notice hidden" role="status"></div>
+    <div id="updateNotice" class="notice update-notice hidden" role="status">
+      <span>يتوفر تحديث للتطبيق.</span>
+      <button type="button" class="text-button" data-action="refresh-app">تحديث الآن</button>
+    </div>
+
+    <main id="mainContent">
+      <section class="view active" id="view-home" aria-labelledby="homeTitle">
+        <h1 class="sr-only" id="homeTitle">الرئيسية</h1>
+        <section class="date-card panel">
+          <div class="date-copy">
+            <span class="eyebrow">اليوم</span>
+            <div class="date-day" id="todayDay">—</div>
+            <div class="date-full" id="todayDate">—</div>
+          </div>
+          <div class="date-mark" aria-hidden="true">
+            <svg viewBox="0 0 44 44"><rect x="7" y="9" width="30" height="28" rx="5"/><path d="M14 6v7m16-7v7M7 17h30M14 24h5m6 0h5M14 30h5"/></svg>
+          </div>
+          <p class="date-note">جدولك الأسبوعي بيتجدد تلقائيًا حسب التاريخ</p>
+        </section>
+
+        <section class="stats-grid" aria-label="إحصائيات الواجبات">
+          <article class="stat-card panel">
+            <div class="stat-icon pending-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></div>
+            <div><div class="stat-label">الواجبات المتبقية</div><div class="stat-number" id="pendingCount">0</div></div>
+          </article>
+          <article class="stat-card panel">
+            <div class="stat-icon completed-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/><circle cx="12" cy="12" r="9"/></svg></div>
+            <div><div class="stat-label">الواجبات المكتملة</div><div class="stat-number" id="completedCount">0</div></div>
+          </article>
+        </section>
+
+        <section class="week-section" aria-labelledby="homeWeekTitle">
+          <div class="section-heading">
+            <div><span class="eyebrow">خطتك الدراسية</span><h2 id="homeWeekTitle">جدول الأسبوع</h2></div>
+          </div>
+          <div id="homeWeekPanel"></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-weeks" aria-labelledby="weeksTitle">
+        <div class="page-heading"><span class="eyebrow">سجلّك الدراسي</span><h1 id="weeksTitle">الأسابيع</h1><p>ارجع لأي أسبوع وراجع حصصك وواجباتك المسجلة.</p></div>
+        <div id="archiveWeekPanel"></div>
+      </section>
+
+      <section class="view" id="view-search" aria-labelledby="searchTitle">
+        <div class="page-heading"><span class="eyebrow">كل واجباتك في مكان واحد</span><h1 id="searchTitle">البحث</h1><p>ابحث باسم المادة أو بكلمات من الواجب.</p></div>
+        <div class="search-panel panel">
+          <label class="search-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+            <input id="searchInput" type="search" placeholder="ابحث عن مادة أو واجب..." autocomplete="off">
+            <button class="clear-search" type="button" data-action="clear-search" aria-label="مسح البحث">×</button>
+          </label>
+          <div class="filter-row" role="group" aria-label="تصفية النتائج">
+            <button class="filter-chip active" type="button" data-filter="all">الكل</button>
+            <button class="filter-chip" type="button" data-filter="pending">غير مكتمل</button>
+            <button class="filter-chip" type="button" data-filter="completed">مكتمل</button>
+          </div>
+        </div>
+        <div class="results-heading"><h2>النتائج</h2><span id="resultCount">0 نتيجة</span></div>
+        <div id="searchResults" class="search-results"></div>
+      </section>
+
+      <section class="view" id="view-settings" aria-labelledby="settingsTitle">
+        <div class="page-heading"><span class="eyebrow">تحكم في تفاصيل جدولك</span><h1 id="settingsTitle">الإعدادات</h1><p>عدّل المواد المقررة واحفظ نسخة من بياناتك.</p></div>
+        <section class="settings-section panel">
+          <div class="settings-section-heading"><div><h2>جدول الحصص</h2><p>أضف أو احذف المواد من كل يوم.</p></div><span class="settings-icon">⌘</span></div>
+          <div id="scheduleEditor" class="schedule-editor"></div>
+          <button class="primary-button save-schedule" type="button" data-action="save-schedule">حفظ تعديلات الجدول</button>
+        </section>
+        <section class="settings-section panel data-tools">
+          <div class="settings-section-heading"><div><h2>إدارة البيانات</h2><p>بياناتك محفوظة على هذا الجهاز فقط.</p></div><span class="settings-icon">⌁</span></div>
+          <button class="setting-action" type="button" data-action="export-data"><span class="setting-action-icon">↓</span><span><strong>تصدير نسخة احتياطية</strong><small>حفظ جميع المواد والواجبات في ملف JSON</small></span><span class="action-chevron">‹</span></button>
+          <div class="settings-divider"></div>
+          <button class="setting-action danger-action" type="button" data-action="delete-completed"><span class="setting-action-icon">×</span><span><strong>حذف الواجبات المكتملة</strong><small>سيُطلب تأكيد الحذف قبل التنفيذ</small></span><span class="action-chevron">‹</span></button>
+        </section>
+        <div class="app-version">دفتر · الإصدار 1.0.0</div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="التنقل الرئيسي">
+      <button class="nav-item active" type="button" data-page="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="m3.5 10 8.5-7 8.5 7v10a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1Z"/><path d="M9 21v-7h6v7"/></svg><span>الرئيسية</span></button>
+      <button class="nav-item" type="button" data-page="weeks"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4m9-4v4M3.5 10h17M8 14h2m4 0h2m-8 3h2"/></svg><span>الأسابيع</span></button>
+      <button class="nav-item" type="button" data-page="search"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span>البحث</span></button>
+      <button class="nav-item" type="button" data-page="settings"><svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 13.5 1.1.8-1.1 2-1.3-.4a7.8 7.8 0 0 1-1.4.8l-.2 1.4h-2.3l-.4-1.3a7.8 7.8 0 0 1-1.6 0l-.8 1.1-2-1.1.4-1.3a7.8 7.8 0 0 1-.8-1.4l-1.4-.2v-2.3l1.3-.4a7.8 7.8 0 0 1 0-1.6l-1.1-.8 1.1-2 1.3.4a7.8 7.8 0 0 1 1.4-.8l.2-1.4h2.3l.4 1.3a7.8 7.8 0 0 1 1.6 0l.8-1.1 2 1.1-.4 1.3a7.8 7.8 0 0 1 .8 1.4l1.4.2v2.3l-1.3.4a7.8 7.8 0 0 1 0 1.6Z" transform="translate(-1 -1) scale(1.08)"/></svg><span>الإعدادات</span></button>
+    </nav>
+  </div>
+
+  <div id="modalRoot" class="modal-root hidden" aria-hidden="true"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
